@@ -1,6 +1,7 @@
 # Write your corrected implementation for Task 2 here.
 # Do not modify `task2.py`.
 import re
+from typing import Iterable, Any, Optional
 
 # Basic regex for standard email validation: local@domain.tld
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
@@ -25,7 +26,7 @@ def is_valid_email(email: str) -> bool:
     return bool(email and EMAIL_REGEX.match(email))
 
 
-def count_valid_emails(emails: list[str] | set[str] | None) -> int:
+def count_valid_emails(emails: Optional[Iterable[Any]]) -> int:
     """
     Counts the number of valid email addresses in a collection.
 

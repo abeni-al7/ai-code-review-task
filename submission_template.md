@@ -118,17 +118,25 @@ I would test the function with valid looking but invalid email addresses to bett
 
 ## 1) Code Review Findings
 ### Critical bugs
-- 
+- The function produces false averages since it considers all the elements in the list by using len(values) in the denominator.
+- Eventhough the description states that it handles mixed input types safely, it would produce a type error if a string is present in a list since strings can't be converted to float by float(v).
 
 ### Edge cases & risks
-- 
+- If an empty list is provided, the function would raise a ZeroDivision error and crash the system.
+- If "NaN" or "inf" appear in the list, direct conversion to float would consider those and would produce "NaN" or "inf" instead of a correct average.
+- If booleans are present in the list float conversion would provide 1.0 for True and 0.0 for False which is misleading.
+- If a non-list input is provided or if the argument is None, the function would raise a TypeError and crash while checking the length with len() or while iterating.
 
 ### Code quality / design issues
-- 
+- Validity checks and calculation are implemented in the same function violating the single responsibility principle.
+- It is better to use the standard library function math.fsum for more accurate floating point sum.
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- 
+- Separated validity and type casting from the average calculation.
+- Used math.fsum for a more accurate sum.
+- Handled booleans, non-finite numbers like NaN/inf and non numeric values.
+- Used the count of valid measurements instead of the size of the entire list for average calculation.
 
 ### Corrected code
 See `correct_task3.py`
@@ -138,18 +146,19 @@ See `correct_task3.py`
 ### Testing Considerations
 If you were to test this function, what areas or scenarios would you focus on, and why?
 
+I would test the function with a variety of invalid inputs, booleans, non-finite numbers and strings to test for resilience. I would also check the happy path by providing valid numbers to see if the average is correctly calculated.
 
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)
 > This function calculates the average of valid measurements by ignoring missing values (None) and averaging the remaining values. It safely handles mixed input types and ensures an accurate average
 
 ### Issues in original explanation
-- 
+- The description does not consider the above mentioned edge cases and it promises safe handling of mixed input types while not handling it in the implementation.
 
 ### Rewritten explanation
-- 
+- This function calculates the average of valid measurements by ignoring missing values (None), booleans, non-finite numebrs(NaN/inf) and invalid strings. It then averages the remaining values using a high precision sum function from the standard library. It safely handles mixed input types and ensures an accurate average.
 
 ## 4) Final Judgment
-- Decision: Approve / Request Changes / Reject
-- Justification:
-- Confidence & unknowns:
+- Decision: Request Changes
+- Justification: The code needed change as it produces false averages and crashes for a wide variety of invalid inputs.
+- Confidence & unknowns: 

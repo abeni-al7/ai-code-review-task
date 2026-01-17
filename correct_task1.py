@@ -1,6 +1,6 @@
 # Write your corrected implementation for Task 1 here.
 # Do not modify `task1.py`.
-from typing import Any
+from typing import List, Dict, Any, Optional
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 # Constants for better maintainability
@@ -8,7 +8,7 @@ STATUS_CANCELLED = "cancelled"
 
 
 def calculate_average_order_value(
-    orders: list[dict[str, Any]] | None,
+    orders: Optional[List[Dict[str, Any]]],
 ) -> Decimal:
     """
     Calculates the exact average value of non-cancelled orders using
@@ -18,7 +18,7 @@ def calculate_average_order_value(
     if not isinstance(orders, list) or not orders:
         return Decimal("0.00")
 
-    valid_amounts: list[Decimal] = []
+    valid_amounts: List[Decimal] = []
 
     for order in orders:
         # Normalize status for case-insensitive comparison
@@ -27,7 +27,7 @@ def calculate_average_order_value(
 
         if status != STATUS_CANCELLED and amount_raw is not None:
             try:
-                # Converting from string to Decimal is safer than from float.
+                # Convert to Decimal.
                 amount_dec = Decimal(str(amount_raw))
                 valid_amounts.append(amount_dec)
             except (InvalidOperation, ValueError, TypeError):
